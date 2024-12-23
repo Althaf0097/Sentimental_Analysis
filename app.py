@@ -2,16 +2,17 @@ from flask import Flask, render_template, request, jsonify
 import pickle
 import logging
 import numpy as np  # Add numpy for type conversion
+import os  # Add os for environment variables
 
-# Load the models and vectorizers for each language
+# Load the models and vectorizers for each language using environment variables for flexibility
 models = {
     'english': {
-        'model': pickle.load(open('./english_lr.pkl', 'rb')),
-        'vectorizer': pickle.load(open('./english_tfidf_vectorizer.pkl', 'rb'))
+        'model': pickle.load(open(os.getenv('ENGLISH_MODEL_PATH', './english_lr.pkl'), 'rb')),
+        'vectorizer': pickle.load(open(os.getenv('ENGLISH_VECTORIZER_PATH', './english_tfidf_vectorizer.pkl'), 'rb'))
     },
     'hindi': {
-        'model': pickle.load(open('./hindi_model.pkl', 'rb')),
-        'vectorizer': pickle.load(open('./hindi_tfidf_vectorizer.pkl', 'rb'))
+        'model': pickle.load(open(os.getenv('HINDI_MODEL_PATH', './hindi_model.pkl'), 'rb')),
+        'vectorizer': pickle.load(open(os.getenv('HINDI_VECTORIZER_PATH', './hindi_tfidf_vectorizer.pkl'), 'rb'))
     }
 }
 
@@ -26,7 +27,7 @@ sentiment_mapping = {
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 @app.route('/')
 def home():
@@ -46,7 +47,7 @@ def predict():
             return jsonify({'error': 'Empty review. Please enter some text.'})
 
         if language not in models:
-            return jsonify({'error': 'Invalid language selected.'})
+            return jsonify({'error': 'Invalid language selected. Please choose either English or Hindi.'})
 
         # Preprocess the review
         preprocessed_review = review.lower().strip()  # Lowercase for consistency
@@ -95,4 +96,6 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Use environment variables for host and port
+    port = int(os.environ.get('PORT', 5000))  # Default to 5000 if PORT is not set
+    app.run(host='0.0.0.0', port=port, debug=False)
