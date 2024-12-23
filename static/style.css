@@ -1,0 +1,84 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffe6e6; /* Light blush background */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  color: #d9534f; /* Blush red for headings */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 10px 0 5px;
+  font-weight: bold;
+  color: #b23a48; /* Muted blush for labels */
+}
+
+textarea, select, button {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #f5b5b5; /* Soft blush border */
+  border-radius: 4px;
+}
+
+textarea, select {
+  background-color: #fff5f5; /* Blush background for input fields */
+}
+
+button {
+  background-color: #d9534f; /* Blush red */
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #b23a48; /* Darker blush red on hover */
+}
+
+#result {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #f5b5b5; /* Soft blush border */
+  border-radius: 4px;
+  background-color: #fff5f5; /* Blush background for results */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  textarea, select, button {
+    font-size: 1em;
+  }
+
+  button {
+    padding: 10px;
+  }
+}

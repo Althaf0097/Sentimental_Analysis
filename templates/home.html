@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Language Sentiment Analysis</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Multi-Language Sentiment Analysis</h1>
+      <form id="sentiment-form" method="POST" action="/predict">
+        <!-- Language Selection Dropdown -->
+        <label for="language">Select Language:</label>
+        <select id="language" name="language" required>
+          <option value="english">English</option>
+          <option value="hindi">Hindi</option>
+        </select>
+
+        <!-- Text Area for Review -->
+        <label for="review">Enter your review:</label>
+        <textarea
+          id="review"
+          name="review"
+          placeholder="Type your review here..."
+          required
+        ></textarea>
+
+        <!-- Submit Button -->
+        <button type="submit">Analyze Sentiment</button>
+      </form>
+
+      <!-- Display Sentiment Result -->
+      <div id="result">
+        <h2>Sentiment Result</h2>
+        <p id="sentiment"></p>
+        <div id="probabilities"></div>
+      </div>
+    </div>
+
+    <script>
+      // Use JavaScript to handle form submission asynchronously
+      document
+        .getElementById("sentiment-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Get input values
+          const formData = new FormData(this);
+
+          // Make a POST request to the Flask backend
+          const response = await fetch("/predict", {
+            method: "POST",
+            body: formData, // Use FormData for compatibility with Flask's `request.form`
+          });
+
+          const result = await response.json();
+
+          // Handle response from the server
+          if (result.error) {
+            document.getElementById(
+              "sentiment"
+            ).textContent = `Error: ${result.error}`;
+          } else {
+            document.getElementById(
+              "sentiment"
+            ).textContent = `Sentiment: ${result.sentiment}`;
+
+            const probabilities = result.probabilities;
+            let probHtml = "<ul>";
+            for (const [key, value] of Object.entries(probabilities)) {
+              if (value !== null) probHtml += `<li>${key}: ${value}%</li>`;
+            }
+            probHtml += "</ul>";
+            document.getElementById("probabilities").innerHTML = probHtml;
+          }
+        });
+    </script>
+  </body>
+</html>
